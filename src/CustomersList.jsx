@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 
-export default class MainContent extends Component {
+export default class CustomersList extends Component {
   state = {
     pageTitle:"Customers", 
     customersCount:5,
@@ -12,12 +12,6 @@ export default class MainContent extends Component {
       {id:5, name:"Jennet", phone:'123-896', photo: "https://picsum.photos/id/1050/60"},
     ]
   };
-
-  customerNameStyle = (name) => {
-    if(name.startsWith("S")) return "green-highlight";
-    else if (name.startsWith("I")) return "pink-highlight";
-    else return "";
-  }
 
   render() {
     return (
@@ -54,15 +48,25 @@ export default class MainContent extends Component {
 
   getCustomerRow = () => {
     return(
-    this.state.customers.map((person) => { 
+    this.state.customers.map((person, index) => { 
       return(
         <tr key={person.id}>
           <td>{person.id}</td>
-          <td><img src={person.photo} alt="profile{person.id}"></img></td>
-          <td className={this.customerNameStyle(person.name)}>{person.name}</td>
+          <td>
+            <img src={person.photo} alt="profile{person.id}"></img>
+            <div><button className="btn btn-sm btn-secondary" onClick={() => {this.onChangePictureClick(person, index)}}>Change picture</button></div>
+          </td>
+          <td>{person.name}</td>
           <td>{this.getPhoneToRender(person.phone)}</td>
         </tr>)
     })
     )
+  }
+
+  onChangePictureClick = (person, index) => {
+    console.log(person);
+    let custArr = this.state.customers;
+    custArr[index].photo = "https://picsum.photos/id/1042/60"
+    this.setState({customers:custArr})
   }
 }

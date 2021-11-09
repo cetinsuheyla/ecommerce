@@ -1,13 +1,13 @@
 import React, {Component} from 'react';
 import Navbar from "./Navbar";
-import MainContent from './MainContent';
+import ShoppingCart from './ShoppingCart';
 
 class App extends Component {
   render(){
     return (
       <div>
         <Navbar />
-        <MainContent />
+        <ShoppingCart />
       </div>
     )
   }
