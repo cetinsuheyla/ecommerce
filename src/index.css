@@ -11,3 +11,7 @@
 	color: mistyrose;
 	font-weight: bolder;
 }
+
+.hand-icon {
+	cursor: pointer;
+}

@@ -3,17 +3,11 @@ import Product from './Product'
 
 export default class ShoppingCart extends Component {
 
-  state = {
-    products: [
-      {id:1, productName:"iPhone", price: 1500, quantity: 0},
-      {id:2, productName:"Samsung", price: 2800, quantity: 0},
-      {id:3, productName:"LG", price: 1600, quantity: 0},
-      {id:4, productName:"Google", price: 1700, quantity: 0},
-      {id:5, productName:"Motorola", price: 1890, quantity: 0},
-      {id:6, productName:"Nokia", price: 1800, quantity: 0},
-      {id:7, productName:"Fizz", price: 1450, quantity: 0},
-
-    ]
+  constructor(props){
+    super(props);
+    this.state = {
+      products: [],
+    }
   }
 
   render() {
@@ -21,7 +15,7 @@ export default class ShoppingCart extends Component {
       <div className="container-fluid">
         <h4>Shopping Cart</h4>
         <div className="row">{this.state.products.map((prod) => {
-          return <Product key={prod.id} product={prod} onIncrement={this.handleIncrement} onDecrement={this.handleDecrement}>
+          return <Product key={prod.id} product={prod} onIncrement={this.handleIncrement} onDecrement={this.handleDecrement} onDelete={this.handleDelete}>
             <button className="btn btn-primary">Buy now</button>
           </Product>
         })}</div>
@@ -29,17 +23,31 @@ export default class ShoppingCart extends Component {
     )
   }
 
+  componentDidMount= async() => {
+
+    const response = await fetch("http://localhost:3000/products", {method:"GET"});
+    const productsArray = await response.json();
+    this.setState({products:productsArray})
+  }
+
   handleIncrement = (product, maxValue) => {
-    //get index of the selected product
+    //map through the array to increment the quantity
     let allProducts = [...this.state.products];
-    let index = allProducts.indexOf(product);
-    if(allProducts[index].quantity < maxValue){allProducts[index].quantity++;}
+    if(product.quantity < maxValue){
+      allProducts.map((item) => {return item.id===product.id ? item.quantity++ : null})
+    }
     this.setState({products:allProducts})
   };
   handleDecrement = (product, minValue) => {
+    //this is another way. Get index of the selected product
     let allProducts = [...this.state.products];
     let index = allProducts.indexOf(product);
     if(allProducts[index].quantity > minValue) {allProducts[index].quantity--;}
     this.setState({products:allProducts})
   };
+  handleDelete = (product) => {
+    if(window.confirm("Are you sure to delete?")){
+    const newProducts = this.state.products.filter((item) => item.id !== product.id);
+    this.setState({products:newProducts}); 
+  }}
 }
